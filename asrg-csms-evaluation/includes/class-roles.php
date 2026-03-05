@@ -1,6 +1,9 @@
 <?php
 /**
- * Custom WordPress roles for CSMS evaluation.
+ * Custom WordPress roles and CPT capabilities for CSMS evaluation.
+ *
+ * Uses WordPress post type capabilities (edit_csms_tools, publish_csms_tools, etc.)
+ * instead of custom capability strings for proper CPT integration.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,32 +13,76 @@ if ( ! defined( 'ABSPATH' ) ) {
 class ASRG_CSMS_Roles {
 
     /**
+     * All CPT capabilities for csms_tool.
+     */
+    const CPT_CAPS = [
+        'edit_csms_tool',
+        'read_csms_tool',
+        'delete_csms_tool',
+        'edit_csms_tools',
+        'edit_others_csms_tools',
+        'publish_csms_tools',
+        'read_private_csms_tools',
+        'delete_csms_tools',
+        'delete_private_csms_tools',
+        'delete_published_csms_tools',
+        'delete_others_csms_tools',
+        'edit_private_csms_tools',
+        'edit_published_csms_tools',
+    ];
+
+    /**
+     * Custom capabilities for feedback and moderation.
+     */
+    const FEEDBACK_CAPS = [
+        'csms_vote',
+        'csms_comment',
+        'csms_moderate_comments',
+    ];
+
+    /**
      * Register custom roles on plugin activation.
      */
     public static function register(): void {
-        // Vendor role: can submit and update their own tool evaluations.
+        // Vendor role: can create and edit own tool evaluations.
         add_role( 'csms_vendor', __( 'CSMS Vendor', 'asrg-csms' ), [
-            'read'                  => true,
-            'csms_submit_tool'      => true,
-            'csms_edit_own_tool'    => true,
-            'csms_vote'             => true,
-            'csms_comment'          => true,
+            'read'                        => true,
+            'upload_files'                => true,
+            'edit_csms_tool'              => true,
+            'read_csms_tool'              => true,
+            'delete_csms_tool'            => true,
+            'edit_csms_tools'             => true,
+            'publish_csms_tools'          => true, // Allows setting to 'pending'.
+            'delete_csms_tools'           => true,
+            'edit_published_csms_tools'   => true,
+            'delete_published_csms_tools' => true,
+            'csms_vote'                   => true,
+            'csms_comment'                => true,
         ] );
 
-        // Editor role: can approve/reject vendor submissions and override scores.
+        // Editor role: can manage all tool evaluations.
         add_role( 'csms_editor', __( 'CSMS Editor', 'asrg-csms' ), [
-            'read'                  => true,
-            'csms_submit_tool'      => true,
-            'csms_edit_own_tool'    => true,
-            'csms_edit_any_tool'    => true,
-            'csms_approve_tool'     => true,
-            'csms_override_score'   => true,
-            'csms_vote'             => true,
-            'csms_comment'          => true,
-            'csms_moderate_comments' => true,
+            'read'                         => true,
+            'upload_files'                 => true,
+            'edit_csms_tool'               => true,
+            'read_csms_tool'               => true,
+            'delete_csms_tool'             => true,
+            'edit_csms_tools'              => true,
+            'edit_others_csms_tools'       => true,
+            'publish_csms_tools'           => true,
+            'read_private_csms_tools'      => true,
+            'delete_csms_tools'            => true,
+            'delete_private_csms_tools'    => true,
+            'delete_published_csms_tools'  => true,
+            'delete_others_csms_tools'     => true,
+            'edit_private_csms_tools'      => true,
+            'edit_published_csms_tools'    => true,
+            'csms_vote'                    => true,
+            'csms_comment'                 => true,
+            'csms_moderate_comments'       => true,
         ] );
 
-        // Grant feedback capabilities to existing subscriber role.
+        // Grant feedback capabilities to subscribers.
         $subscriber = get_role( 'subscriber' );
         if ( $subscriber ) {
             $subscriber->add_cap( 'csms_vote' );
@@ -45,14 +92,12 @@ class ASRG_CSMS_Roles {
         // Grant all CSMS capabilities to administrators.
         $admin = get_role( 'administrator' );
         if ( $admin ) {
-            $admin->add_cap( 'csms_submit_tool' );
-            $admin->add_cap( 'csms_edit_own_tool' );
-            $admin->add_cap( 'csms_edit_any_tool' );
-            $admin->add_cap( 'csms_approve_tool' );
-            $admin->add_cap( 'csms_override_score' );
-            $admin->add_cap( 'csms_vote' );
-            $admin->add_cap( 'csms_comment' );
-            $admin->add_cap( 'csms_moderate_comments' );
+            foreach ( self::CPT_CAPS as $cap ) {
+                $admin->add_cap( $cap );
+            }
+            foreach ( self::FEEDBACK_CAPS as $cap ) {
+                $admin->add_cap( $cap );
+            }
         }
     }
 
@@ -63,22 +108,12 @@ class ASRG_CSMS_Roles {
         remove_role( 'csms_vendor' );
         remove_role( 'csms_editor' );
 
-        // Remove capabilities from built-in roles.
-        $capabilities = [
-            'csms_submit_tool',
-            'csms_edit_own_tool',
-            'csms_edit_any_tool',
-            'csms_approve_tool',
-            'csms_override_score',
-            'csms_vote',
-            'csms_comment',
-            'csms_moderate_comments',
-        ];
+        $all_caps = array_merge( self::CPT_CAPS, self::FEEDBACK_CAPS );
 
         foreach ( [ 'subscriber', 'administrator' ] as $role_name ) {
             $role = get_role( $role_name );
             if ( $role ) {
-                foreach ( $capabilities as $cap ) {
+                foreach ( $all_caps as $cap ) {
                     $role->remove_cap( $cap );
                 }
             }

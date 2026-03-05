@@ -2,6 +2,9 @@
 /**
  * Scoring engine — computes rollup scores from sub-feature ratings.
  *
+ * Reads sub-feature ratings from post meta (JetEngine fields) and
+ * writes computed scores back to post meta for display by Elementor.
+ *
  * Sub-feature ratings:
  *   fully_fulfills    = 1.0
  *   partially_fulfills = 0.5
@@ -42,36 +45,23 @@ class ASRG_CSMS_Scoring_Engine {
     }
 
     /**
-     * Compute scores for a single tool.
+     * Compute scores for a single tool (WP post).
      *
-     * @param int        $tool_id  The tool database ID.
+     * @param int        $post_id  The csms_tool post ID.
      * @param array|null $feedback Optional pre-fetched feedback data.
      * @return array Computed score tree.
      */
-    public static function compute_tool_score( int $tool_id, ?array $feedback = null ): array {
-        global $wpdb;
-
+    public static function compute_tool_score( int $post_id, ?array $feedback = null ): array {
         $framework = self::get_framework();
-        $table     = ASRG_CSMS_Database::table( 'tool_scores' );
-
-        // Fetch all scores for this tool.
-        $raw_scores = $wpdb->get_results(
-            $wpdb->prepare( "SELECT sub_feature_id, rating, rationale, evidence_url FROM {$table} WHERE tool_id = %d", $tool_id ),
-            ARRAY_A
-        );
-
-        $score_map = [];
-        foreach ( $raw_scores as $row ) {
-            $score_map[ $row['sub_feature_id'] ] = $row;
-        }
 
         // Fetch feedback if not provided.
         if ( null === $feedback ) {
-            $feedback = self::get_feedback_summary( $tool_id );
+            $feedback = self::get_feedback_summary( $post_id );
         }
 
-        $category_scores = [];
-        $overall_score   = 0.0;
+        $category_scores   = [];
+        $overall_score     = 0.0;
+        $overall_editorial = 0.0;
 
         foreach ( $framework['categories'] as $category ) {
             $sub_feature_scores = [];
@@ -79,19 +69,24 @@ class ASRG_CSMS_Scoring_Engine {
             $adjusted_sum       = 0.0;
 
             foreach ( $category['subFeatures'] as $sf ) {
-                $score_row     = $score_map[ $sf['id'] ] ?? null;
-                $rating        = $score_row ? $score_row['rating'] : 'does_not_fulfill';
-                $numeric       = self::RATING_VALUES[ $rating ] ?? 0.0;
-                $weight        = (float) $sf['weight'];
+                $meta_prefix = str_replace( '-', '_', $sf['id'] );
+
+                // Read rating from post meta.
+                $rating   = get_post_meta( $post_id, $meta_prefix . '_rating', true );
+                $rating   = ( $rating && isset( self::RATING_VALUES[ $rating ] ) ) ? $rating : 'does_not_fulfill';
+                $numeric  = self::RATING_VALUES[ $rating ];
+                $weight   = (float) $sf['weight'];
+
+                // Read rationale and evidence from post meta.
+                $rationale    = get_post_meta( $post_id, $meta_prefix . '_rationale', true ) ?: '';
+                $evidence_url = get_post_meta( $post_id, $meta_prefix . '_evidence_url', true ) ?: '';
 
                 // Community confidence.
-                $fb_key     = $sf['id'];
                 $confidence = 0.0;
-
-                if ( isset( $feedback[ $fb_key ] ) ) {
+                if ( isset( $feedback[ $sf['id'] ] ) ) {
                     $confidence = self::compute_community_confidence(
-                        $feedback[ $fb_key ]['agree'],
-                        $feedback[ $fb_key ]['disagree']
+                        $feedback[ $sf['id'] ]['agree'],
+                        $feedback[ $sf['id'] ]['disagree']
                     );
                 }
 
@@ -104,8 +99,8 @@ class ASRG_CSMS_Scoring_Engine {
                     'communityConfidence' => round( $confidence, 4 ),
                     'adjustedRating'      => round( $adjusted, 4 ),
                     'weight'              => $weight,
-                    'rationale'           => $score_row['rationale'] ?? '',
-                    'evidenceUrl'         => $score_row['evidence_url'] ?? '',
+                    'rationale'           => $rationale,
+                    'evidenceUrl'         => $evidence_url,
                 ];
 
                 $editorial_sum += $numeric * $weight;
@@ -122,14 +117,39 @@ class ASRG_CSMS_Scoring_Engine {
                 'subFeatureScores'       => $sub_feature_scores,
             ];
 
-            $overall_score += $adjusted_score * (float) $category['weight'];
+            $overall_score     += $adjusted_score * (float) $category['weight'];
+            $overall_editorial += $editorial_score * (float) $category['weight'];
         }
 
         return [
-            'toolId'         => $tool_id,
+            'toolId'         => $post_id,
             'overallScore'   => round( $overall_score, 1 ),
+            'editorialScore' => round( $overall_editorial, 1 ),
             'categoryScores' => $category_scores,
         ];
+    }
+
+    /**
+     * Compute and persist scores as post meta.
+     *
+     * @param int $post_id The csms_tool post ID.
+     * @return array The computed score tree.
+     */
+    public static function compute_and_store( int $post_id ): array {
+        $result = self::compute_tool_score( $post_id );
+
+        // Store overall scores.
+        update_post_meta( $post_id, '_overall_score', $result['overallScore'] );
+        update_post_meta( $post_id, '_overall_editorial_score', $result['editorialScore'] );
+
+        // Store per-category scores.
+        foreach ( $result['categoryScores'] as $cs ) {
+            $cat_key = str_replace( '-', '_', $cs['categoryId'] );
+            update_post_meta( $post_id, '_cat_' . $cat_key . '_score', $cs['communityAdjustedScore'] );
+            update_post_meta( $post_id, '_cat_' . $cat_key . '_editorial_score', $cs['editorialScore'] );
+        }
+
+        return $result;
     }
 
     /**
@@ -137,7 +157,7 @@ class ASRG_CSMS_Scoring_Engine {
      *
      * @return array Keyed by sub_feature_id => ['agree' => int, 'disagree' => int]
      */
-    public static function get_feedback_summary( int $tool_id ): array {
+    public static function get_feedback_summary( int $post_id ): array {
         global $wpdb;
 
         $table = ASRG_CSMS_Database::table( 'feedback_votes' );
@@ -148,7 +168,7 @@ class ASRG_CSMS_Scoring_Engine {
                  FROM {$table}
                  WHERE tool_id = %d
                  GROUP BY sub_feature_id, vote_type",
-                $tool_id
+                $post_id
             ),
             ARRAY_A
         );

@@ -2,8 +2,8 @@
 /**
  * Plugin Name: ASRG CSMS Tool Evaluation
  * Plugin URI:  https://asrg.io/csms-evaluation
- * Description: Community-driven evaluation framework and comparison table for automotive CSMS tools, anchored in ISO/SAE 21434.
- * Version:     1.0.0
+ * Description: Community-driven evaluation framework and comparison table for automotive CSMS tools, anchored in ISO/SAE 21434. Powered by JetEngine + Elementor.
+ * Version:     2.0.0
  * Author:      ASRG
  * Author URI:  https://asrg.io
  * License:     GPL-2.0-or-later
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'ASRG_CSMS_VERSION', '1.0.0' );
+define( 'ASRG_CSMS_VERSION', '2.0.0' );
 define( 'ASRG_CSMS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'ASRG_CSMS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'ASRG_CSMS_PLUGIN_FILE', __FILE__ );
@@ -27,9 +27,14 @@ require_once ASRG_CSMS_PLUGIN_DIR . 'includes/class-plugin.php';
 function asrg_csms_activate() {
     require_once ASRG_CSMS_PLUGIN_DIR . 'includes/class-database.php';
     require_once ASRG_CSMS_PLUGIN_DIR . 'includes/class-roles.php';
+    require_once ASRG_CSMS_PLUGIN_DIR . 'includes/class-cpt-registration.php';
 
     ASRG_CSMS_Database::create_tables();
     ASRG_CSMS_Roles::register();
+
+    // Register CPT before flushing rewrite rules so permalinks work.
+    $cpt = new ASRG_CSMS_CPT_Registration();
+    $cpt->register_post_type();
 
     flush_rewrite_rules();
 }
@@ -40,8 +45,10 @@ register_activation_hook( __FILE__, 'asrg_csms_activate' );
  */
 function asrg_csms_deactivate() {
     require_once ASRG_CSMS_PLUGIN_DIR . 'includes/class-roles.php';
+    require_once ASRG_CSMS_PLUGIN_DIR . 'includes/class-score-hooks.php';
 
     ASRG_CSMS_Roles::unregister();
+    ASRG_CSMS_Score_Hooks::deactivate();
 
     flush_rewrite_rules();
 }
