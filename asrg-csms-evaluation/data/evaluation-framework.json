@@ -1,0 +1,387 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-05",
+  "categories": [
+    {
+      "id": "risk-management",
+      "slug": "risk-management",
+      "name": "Risk Management",
+      "description": "Full lifecycle risk assessment capabilities including TARA automation, threat-to-asset mapping, and residual risk tracking per ISO/SAE 21434.",
+      "weight": 0.15,
+      "subFeatures": [
+        {
+          "id": "rm-automated-tara",
+          "name": "Automated TARA Generation",
+          "description": "Ability to automatically generate Threat Analysis and Risk Assessment based on system architecture inputs.",
+          "weight": 0.2,
+          "isoReference": "ISO/SAE 21434 Clause 15"
+        },
+        {
+          "id": "rm-threat-asset-mapping",
+          "name": "Threat-to-Asset Mapping",
+          "description": "Bi-directional traceability between identified threats and system assets/components.",
+          "weight": 0.2,
+          "isoReference": "ISO/SAE 21434 Clause 15.4"
+        },
+        {
+          "id": "rm-residual-risk",
+          "name": "Residual Risk Tracking",
+          "description": "Tracking of residual risk after mitigation measures are applied, with risk acceptance workflows.",
+          "weight": 0.15
+        },
+        {
+          "id": "rm-risk-lifecycle",
+          "name": "Risk Lifecycle Management",
+          "description": "End-to-end risk management from identification through monitoring, including periodic reassessment triggers.",
+          "weight": 0.2,
+          "isoReference": "ISO/SAE 21434 Clause 8"
+        },
+        {
+          "id": "rm-attack-path",
+          "name": "Attack Path Analysis",
+          "description": "Automated or guided analysis of potential attack paths through system architecture.",
+          "weight": 0.15
+        },
+        {
+          "id": "rm-reporting",
+          "name": "Risk Reporting & Dashboards",
+          "description": "Visual dashboards and exportable reports for risk posture communication to stakeholders.",
+          "weight": 0.1
+        }
+      ]
+    },
+    {
+      "id": "vulnerability-management",
+      "slug": "vulnerability-management",
+      "name": "Vulnerability Management",
+      "description": "Discovery, prioritization, remediation tracking, and feed integration for vulnerability management.",
+      "weight": 0.15,
+      "subFeatures": [
+        {
+          "id": "vm-cve-feed",
+          "name": "CVE/NVD Feed Integration",
+          "description": "Automated ingestion of CVE data from NVD, vendor advisories, and other vulnerability databases.",
+          "weight": 0.2,
+          "isoReference": "ISO/SAE 21434 Clause 8.6"
+        },
+        {
+          "id": "vm-prioritization",
+          "name": "Vulnerability Prioritization",
+          "description": "Risk-based prioritization considering CVSS, asset criticality, exploitability, and automotive context.",
+          "weight": 0.2
+        },
+        {
+          "id": "vm-remediation",
+          "name": "Remediation Tracking",
+          "description": "Workflow for tracking vulnerability remediation from discovery through verification.",
+          "weight": 0.2
+        },
+        {
+          "id": "vm-sbom-matching",
+          "name": "SBOM-Based Vulnerability Matching",
+          "description": "Automatic matching of known vulnerabilities against components listed in SBOM/HBOM.",
+          "weight": 0.2
+        },
+        {
+          "id": "vm-risk-linkage",
+          "name": "Vulnerability-to-Risk Linkage",
+          "description": "Linkage of individual vulnerabilities to broader risk assessments and treatment plans.",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "id": "asset-management",
+      "slug": "asset-management",
+      "name": "Asset Management",
+      "description": "Data import, hierarchical structuring, relationship mapping, BOM management, and lifecycle tracking for assets.",
+      "weight": 0.15,
+      "subFeatures": [
+        {
+          "id": "am-data-import",
+          "name": "Data Import Capabilities",
+          "description": "Ability to import asset data via bulk upload, API, or manual entry from various formats.",
+          "weight": 0.1
+        },
+        {
+          "id": "am-hierarchy",
+          "name": "Hierarchical Asset Structuring",
+          "description": "Support for nested, hierarchical organization of assets reflecting system architecture.",
+          "weight": 0.15
+        },
+        {
+          "id": "am-relationships",
+          "name": "Asset Relationship Mapping",
+          "description": "Ability to define and visualize relationships and dependencies between assets.",
+          "weight": 0.15
+        },
+        {
+          "id": "am-sbom",
+          "name": "SBOM Management",
+          "description": "Import, storage, and management of Software Bill of Materials in standard formats (SPDX, CycloneDX).",
+          "weight": 0.15,
+          "isoReference": "ISO/SAE 21434 Clause 7"
+        },
+        {
+          "id": "am-hbom",
+          "name": "HBOM Management",
+          "description": "Import, storage, and management of Hardware Bill of Materials.",
+          "weight": 0.1
+        },
+        {
+          "id": "am-cbom",
+          "name": "CBOM Management",
+          "description": "Import, storage, and management of Cryptographic Bill of Materials.",
+          "weight": 0.1
+        },
+        {
+          "id": "am-lifecycle",
+          "name": "Asset Lifecycle Tracking",
+          "description": "Tracking assets through their lifecycle: creation, deployment, maintenance, and decommissioning.",
+          "weight": 0.15
+        },
+        {
+          "id": "am-versioning",
+          "name": "Version Management",
+          "description": "Tracking of asset versions, firmware revisions, and software updates across the fleet.",
+          "weight": 0.1
+        }
+      ]
+    },
+    {
+      "id": "incident-management",
+      "slug": "incident-management",
+      "name": "Incident Management",
+      "description": "Incident detection, alerting, logging, playbook management, escalation, KPI tracking, forensics, and external integration.",
+      "weight": 0.15,
+      "subFeatures": [
+        {
+          "id": "im-detection",
+          "name": "Incident Detection & Alerting",
+          "description": "Automated detection of security incidents with configurable alerting and notification mechanisms.",
+          "weight": 0.15,
+          "isoReference": "ISO/SAE 21434 Clause 13"
+        },
+        {
+          "id": "im-logging",
+          "name": "Logging & Reporting",
+          "description": "Comprehensive incident logging with structured data capture and regulatory-compliant reporting.",
+          "weight": 0.15
+        },
+        {
+          "id": "im-playbooks",
+          "name": "Playbook Management",
+          "description": "Predefined and customizable incident response playbooks with step-by-step guided workflows.",
+          "weight": 0.15
+        },
+        {
+          "id": "im-escalation",
+          "name": "Escalation Workflows",
+          "description": "Configurable escalation paths based on severity, impact, and response SLAs.",
+          "weight": 0.1
+        },
+        {
+          "id": "im-kpis",
+          "name": "KPI Tracking (MTTD, MTTR)",
+          "description": "Measurement and dashboarding of key performance indicators: Mean Time to Detect, Mean Time to Respond.",
+          "weight": 0.15
+        },
+        {
+          "id": "im-forensics",
+          "name": "Forensics & Root Cause Analysis",
+          "description": "Tools for post-incident forensic analysis, evidence preservation, and root cause investigation.",
+          "weight": 0.15
+        },
+        {
+          "id": "im-external-ir",
+          "name": "External IR Platform Integration",
+          "description": "Integration with external incident response platforms, CSIRT tools, and auto-ISAC feeds.",
+          "weight": 0.15
+        }
+      ]
+    },
+    {
+      "id": "technology-stack",
+      "slug": "technology-stack",
+      "name": "Technology Stack",
+      "description": "Underlying architecture, cloud infrastructure, APIs, database technology, and integration capabilities.",
+      "weight": 0.1,
+      "subFeatures": [
+        {
+          "id": "ts-architecture",
+          "name": "Architecture",
+          "description": "Underlying software architecture: monolith, microservices, serverless, or hybrid approach.",
+          "weight": 0.2
+        },
+        {
+          "id": "ts-cloud",
+          "name": "Cloud Infrastructure & Deployment",
+          "description": "Deployment model: SaaS, on-premise, hybrid. Cloud providers supported. Multi-tenancy approach.",
+          "weight": 0.2
+        },
+        {
+          "id": "ts-database",
+          "name": "Database Technology",
+          "description": "Database technology used for data storage, including scalability and backup capabilities.",
+          "weight": 0.2
+        },
+        {
+          "id": "ts-security",
+          "name": "Security Architecture",
+          "description": "Encryption at rest and in transit, access control model, audit logging, and data isolation.",
+          "weight": 0.2
+        },
+        {
+          "id": "ts-scalability",
+          "name": "Scalability & Performance",
+          "description": "Ability to scale with growing data volumes, users, and asset counts typical of automotive OEMs.",
+          "weight": 0.2
+        }
+      ]
+    },
+    {
+      "id": "api-capabilities",
+      "slug": "api-capabilities",
+      "name": "API Capabilities",
+      "description": "Availability, comprehensiveness, documentation, and authentication mechanisms of the tool's API.",
+      "weight": 0.1,
+      "subFeatures": [
+        {
+          "id": "api-availability",
+          "name": "API Availability",
+          "description": "Whether the tool provides a public API (REST, GraphQL, gRPC, etc.) for programmatic access.",
+          "weight": 0.25
+        },
+        {
+          "id": "api-comprehensiveness",
+          "name": "Data Access Comprehensiveness",
+          "description": "Percentage of tool functionality accessible via API. Can all data be read and written programmatically?",
+          "weight": 0.25
+        },
+        {
+          "id": "api-documentation",
+          "name": "API Documentation Quality",
+          "description": "Quality and completeness of API documentation: OpenAPI specs, code examples, interactive docs.",
+          "weight": 0.25
+        },
+        {
+          "id": "api-auth",
+          "name": "API Authentication & Security",
+          "description": "Authentication mechanisms: OAuth 2.0, API keys, JWT. Rate limiting and versioning support.",
+          "weight": 0.25
+        }
+      ]
+    },
+    {
+      "id": "integrations",
+      "slug": "integrations",
+      "name": "Integrations",
+      "description": "Checklist of common tool integrations: project management, CI/CD, threat intel, SOC tools, and more.",
+      "weight": 0.1,
+      "subFeatures": [
+        {
+          "id": "int-jira",
+          "name": "Jira Integration",
+          "description": "Native or plugin-based integration with Atlassian Jira for issue tracking and project management.",
+          "weight": 0.12
+        },
+        {
+          "id": "int-servicenow",
+          "name": "ServiceNow Integration",
+          "description": "Integration with ServiceNow for IT service management and incident workflows.",
+          "weight": 0.12
+        },
+        {
+          "id": "int-cicd",
+          "name": "CI/CD Pipeline Integration",
+          "description": "Integration with CI/CD tools: Jenkins, GitLab CI, GitHub Actions, Azure DevOps.",
+          "weight": 0.12
+        },
+        {
+          "id": "int-threat-intel",
+          "name": "Threat Intelligence Platforms",
+          "description": "Integration with threat intelligence feeds and platforms (MISP, STIX/TAXII, etc.).",
+          "weight": 0.12
+        },
+        {
+          "id": "int-soc-siem",
+          "name": "SOC/SIEM Tools",
+          "description": "Integration with Security Operations Center and SIEM platforms (Splunk, Sentinel, etc.).",
+          "weight": 0.12
+        },
+        {
+          "id": "int-sbom-tools",
+          "name": "SBOM Tools",
+          "description": "Integration with SBOM generation and analysis tools (Syft, Grype, Snyk, etc.).",
+          "weight": 0.12
+        },
+        {
+          "id": "int-vcs",
+          "name": "Version Control Systems",
+          "description": "Integration with Git repositories, GitHub, GitLab, Bitbucket for code-level traceability.",
+          "weight": 0.12
+        },
+        {
+          "id": "int-communication",
+          "name": "Communication Tools",
+          "description": "Integration with Slack, Microsoft Teams, or other communication platforms for notifications.",
+          "weight": 0.08
+        },
+        {
+          "id": "int-other",
+          "name": "Other Integrations",
+          "description": "Additional vendor-specified integrations not covered by the standard checklist.",
+          "weight": 0.08
+        }
+      ]
+    },
+    {
+      "id": "certifications",
+      "slug": "certifications",
+      "name": "Certifications",
+      "description": "Security and compliance certifications held by the tool vendor.",
+      "weight": 0.1,
+      "subFeatures": [
+        {
+          "id": "cert-iso27001",
+          "name": "ISO 27001",
+          "description": "Whether the vendor holds ISO/IEC 27001 information security management certification.",
+          "weight": 0.3
+        },
+        {
+          "id": "cert-soc2",
+          "name": "SOC 2",
+          "description": "Whether the vendor holds SOC 2 Type I or Type II certification for security, availability, and confidentiality.",
+          "weight": 0.3
+        },
+        {
+          "id": "cert-iso21434",
+          "name": "ISO/SAE 21434 Compliance",
+          "description": "Whether the tool or vendor has been certified or assessed for ISO/SAE 21434 compliance.",
+          "weight": 0.25
+        },
+        {
+          "id": "cert-other",
+          "name": "Other Certifications",
+          "description": "Additional relevant certifications: TISAX, ISO 9001, CSA STAR, FedRAMP, etc.",
+          "weight": 0.15
+        }
+      ]
+    },
+    {
+      "id": "sponsor-disclosure",
+      "slug": "sponsor-disclosure",
+      "name": "Sponsor Disclosure",
+      "description": "Transparency about which evaluated tool vendors are ASRG sponsors. This category does not affect the overall score.",
+      "weight": 0.0,
+      "subFeatures": [
+        {
+          "id": "sd-sponsor-status",
+          "name": "ASRG Sponsor Status",
+          "description": "Whether this vendor is a current ASRG sponsor and at what tier.",
+          "weight": 1.0
+        }
+      ]
+    }
+  ]
+}

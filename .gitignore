@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build output (regenerated from source)
+asrg-csms-evaluation/dist/
+asrg-csms-evaluation/frontend/dist/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Claude Code
+.claude/

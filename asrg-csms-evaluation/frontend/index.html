@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASRG CSMS Tool Evaluation (Dev)</title>
+  </head>
+  <body>
+    <div id="csms-evaluation-root"></div>
+    <script>
+      // Mock WordPress config for development.
+      window.csmsConfig = {
+        apiBase: 'http://localhost:3000/wp-json/csms/v1/',
+        nonce: 'dev-nonce',
+        isLoggedIn: false,
+        loginUrl: '#login',
+        user: null,
+        pluginUrl: '/',
+        version: '1.0.0',
+      };
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
