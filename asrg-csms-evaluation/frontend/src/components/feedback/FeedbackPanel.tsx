@@ -73,16 +73,16 @@ export default function FeedbackPanel({
   const user = getUser()
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-2xl border-l border-gray-200 z-50 flex flex-col">
+    <div className="fixed inset-y-0 right-0 w-full max-w-md bg-card shadow-2xl border-l border-border z-50 flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-muted/50">
         <div>
-          <h3 className="font-bold text-sm text-asrg-black">{subFeatureName}</h3>
-          <p className="text-xs text-gray-500">{toolName}</p>
+          <h3 className="font-bold text-sm text-foreground">{subFeatureName}</h3>
+          <p className="text-xs text-muted-foreground">{toolName}</p>
         </div>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-gray-200 rounded transition-colors"
+          className="p-1 hover:bg-accent rounded transition-colors"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -95,18 +95,18 @@ export default function FeedbackPanel({
         {/* Rating */}
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-bold text-gray-500 uppercase">Rating</span>
+            <span className="text-xs font-bold text-muted-foreground uppercase">Rating</span>
             <ScoreBadge rating={score.rating} />
           </div>
           {score.rationale && (
-            <p className="text-sm text-gray-700 leading-relaxed">{score.rationale}</p>
+            <p className="text-sm text-foreground leading-relaxed">{score.rationale}</p>
           )}
           {score.evidenceUrl && (
             <a
               href={score.evidenceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-asrg-purple hover:underline mt-1 inline-block"
+              className="text-xs text-[var(--asrg-blue)] hover:underline mt-1 inline-block"
             >
               View evidence &rarr;
             </a>
@@ -114,12 +114,12 @@ export default function FeedbackPanel({
         </div>
 
         {/* Voting */}
-        <div className="border-t border-gray-100 pt-4">
-          <span className="text-xs font-bold text-gray-500 uppercase mb-2 block">
+        <div className="border-t border-border pt-4">
+          <span className="text-xs font-bold text-muted-foreground uppercase mb-2 block">
             Community Vote
           </span>
           {loading ? (
-            <p className="text-xs text-gray-400">Loading...</p>
+            <p className="text-xs text-muted-foreground">Loading...</p>
           ) : (
             <div className="flex items-center gap-3">
               <button
@@ -127,7 +127,7 @@ export default function FeedbackPanel({
                 className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm font-medium transition-colors ${
                   feedback?.votes.userVote === 'agree'
                     ? 'bg-green-100 text-score-fully border border-green-300'
-                    : 'bg-gray-100 text-gray-600 hover:bg-green-50'
+                    : 'bg-muted text-foreground/80 hover:bg-green-50'
                 }`}
               >
                 <span>&#128077;</span>
@@ -138,14 +138,14 @@ export default function FeedbackPanel({
                 className={`flex items-center gap-1 px-3 py-1.5 rounded text-sm font-medium transition-colors ${
                   feedback?.votes.userVote === 'disagree'
                     ? 'bg-red-100 text-score-does-not border border-red-300'
-                    : 'bg-gray-100 text-gray-600 hover:bg-red-50'
+                    : 'bg-muted text-foreground/80 hover:bg-red-50'
                 }`}
               >
                 <span>&#128078;</span>
                 <span>{feedback?.votes.disagree ?? 0}</span>
               </button>
               {!isLoggedIn() && (
-                <a href={getLoginUrl()} className="text-xs text-asrg-purple hover:underline">
+                <a href={getLoginUrl()} className="text-xs text-[var(--asrg-blue)] hover:underline">
                   Sign in to vote
                 </a>
               )}
@@ -154,13 +154,13 @@ export default function FeedbackPanel({
         </div>
 
         {/* Comments */}
-        <div className="border-t border-gray-100 pt-4">
-          <span className="text-xs font-bold text-gray-500 uppercase mb-3 block">
+        <div className="border-t border-border pt-4">
+          <span className="text-xs font-bold text-muted-foreground uppercase mb-3 block">
             Comments ({feedback?.comments.filter((c) => !c.isDeleted).length ?? 0})
           </span>
 
           {loading ? (
-            <p className="text-xs text-gray-400">Loading comments...</p>
+            <p className="text-xs text-muted-foreground">Loading comments...</p>
           ) : (
             <div className="space-y-3">
               {feedback?.comments
@@ -174,14 +174,14 @@ export default function FeedbackPanel({
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline gap-2">
-                        <span className="text-xs font-bold text-gray-800">
+                        <span className="text-xs font-bold text-foreground">
                           {comment.userName}
                         </span>
-                        <span className="text-[10px] text-gray-400">
+                        <span className="text-[10px] text-muted-foreground">
                           {new Date(comment.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 mt-0.5 break-words">
+                      <p className="text-sm text-foreground/80 mt-0.5 break-words">
                         {comment.body}
                       </p>
 
@@ -196,10 +196,10 @@ export default function FeedbackPanel({
                               className="w-5 h-5 rounded-full flex-shrink-0 mt-0.5"
                             />
                             <div>
-                              <span className="text-xs font-bold text-gray-700">
+                              <span className="text-xs font-bold text-foreground">
                                 {reply.userName}
                               </span>
-                              <p className="text-xs text-gray-500">{reply.body}</p>
+                              <p className="text-xs text-muted-foreground">{reply.body}</p>
                             </div>
                           </div>
                         ))}
@@ -208,7 +208,7 @@ export default function FeedbackPanel({
                 ))}
 
               {feedback?.comments.length === 0 && (
-                <p className="text-xs text-gray-400">No comments yet.</p>
+                <p className="text-xs text-muted-foreground">No comments yet.</p>
               )}
             </div>
           )}
@@ -216,7 +216,7 @@ export default function FeedbackPanel({
       </div>
 
       {/* Comment input */}
-      <div className="border-t border-gray-200 px-5 py-3 bg-gray-50">
+      <div className="border-t border-border px-5 py-3 bg-muted/50">
         {isLoggedIn() && user ? (
           <div className="flex gap-2">
             <input
@@ -226,7 +226,7 @@ export default function FeedbackPanel({
               onKeyDown={(e) => e.key === 'Enter' && handleComment()}
               placeholder="Add a comment..."
               maxLength={2000}
-              className="flex-1 border border-gray-200 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-asrg-purple/50"
+              className="flex-1 border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--asrg-blue)]/50"
             />
             <button
               onClick={handleComment}
@@ -237,7 +237,7 @@ export default function FeedbackPanel({
             </button>
           </div>
         ) : (
-          <a href={getLoginUrl()} className="text-sm text-asrg-purple hover:underline">
+          <a href={getLoginUrl()} className="text-sm text-[var(--asrg-blue)] hover:underline">
             Sign in to comment
           </a>
         )}

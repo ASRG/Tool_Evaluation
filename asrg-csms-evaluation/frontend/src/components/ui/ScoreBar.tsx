@@ -3,25 +3,18 @@ interface ScoreBarProps {
   label?: string
 }
 
-function getScoreColor(score: number): string {
-  if (score >= 75) return 'bg-score-fully'
-  if (score >= 40) return 'bg-score-partially'
-  return 'bg-score-does-not'
+function getScoreStyle(score: number): { bg: string; text: string } {
+  if (score >= 75) return { bg: 'bg-green-500/15 dark:bg-green-500/20', text: 'text-green-700 dark:text-green-400' }
+  if (score >= 40) return { bg: 'bg-amber-500/15 dark:bg-amber-500/20', text: 'text-amber-700 dark:text-amber-400' }
+  return { bg: 'bg-red-500/15 dark:bg-red-500/20', text: 'text-red-700 dark:text-red-400' }
 }
 
 export default function ScoreBar({ score, label }: ScoreBarProps) {
-  const width = Math.max(0, Math.min(100, score))
-  const color = getScoreColor(score)
+  const style = getScoreStyle(score)
 
   return (
-    <div className="flex items-center gap-2 min-w-[120px]">
-      <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
-        <div
-          className={`h-full rounded-full transition-all duration-300 ${color}`}
-          style={{ width: `${width}%` }}
-        />
-      </div>
-      <span className="text-xs font-bold text-gray-600 w-10 text-right tabular-nums">
+    <div className={`inline-flex items-center justify-center rounded-md px-3 py-1.5 min-w-[56px] ${style.bg}`}>
+      <span className={`text-xs font-bold tabular-nums ${style.text}`}>
         {label ?? score.toFixed(1)}
       </span>
     </div>

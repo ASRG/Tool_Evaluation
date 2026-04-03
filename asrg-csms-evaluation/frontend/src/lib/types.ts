@@ -56,8 +56,10 @@ export interface Tool {
   slug: string
   name: string
   vendor: string
+  version: string
   website: string
   logo_url: string
+  logoPlaceholder: string
   description: string
   isSponsor: boolean
   sponsor_tier: string

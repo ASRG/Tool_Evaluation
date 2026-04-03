@@ -9,7 +9,7 @@ interface ScoreCellProps {
 export default function ScoreCell({ score, onClick }: ScoreCellProps) {
   if (!score) {
     return (
-      <td className="px-3 py-2 text-center text-gray-300 text-sm">
+      <td className="px-3 py-2 text-center text-muted-foreground/40 text-sm">
         —
       </td>
     )
@@ -25,7 +25,7 @@ export default function ScoreCell({ score, onClick }: ScoreCellProps) {
         <ScoreBadge rating={score.rating} compact />
         {score.rationale && (
           <svg
-            className="w-3.5 h-3.5 text-gray-400 group-hover:text-asrg-purple"
+            className="w-3.5 h-3.5 text-muted-foreground group-hover:text-[var(--asrg-blue)]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
